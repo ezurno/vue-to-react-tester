@@ -1,43 +1,34 @@
-<script setup>
-import { ref } from 'vue'
-
-defineProps({
-  msg: String,
-})
-
-const count = ref(0)
-</script>
-
+<!-- template에서는 기존의 쓰던 vue 의 문법을 사용하면 됨 -->
 <template>
-  <h1>{{ msg }}</h1>
-
-  <div class="card">
-    <button type="button" @click="count++">count is {{ count }}</button>
-    <p>
-      Edit
-      <code>components/HelloWorld.vue</code> to test HMR
-    </p>
-  </div>
-
-  <p>
-    Check out
-    <a href="https://vuejs.org/guide/quick-start.html#local" target="_blank"
-      >create-vue</a
-    >, the official Vue + Vite starter
-  </p>
-  <p>
-    Learn more about IDE Support for Vue in the
-    <a
-      href="https://vuejs.org/guide/scaling-up/tooling.html#ide-support"
-      target="_blank"
-      >Vue Docs Scaling up Guide</a
-    >.
-  </p>
-  <p class="read-the-docs">Click on the Vite and Vue logos to learn more</p>
+  <BasicPure :foo="foo">
+    <h2>Children</h2>
+  </BasicPure>
+  <Basic />
+  <Basic />
 </template>
 
-<style scoped>
-.read-the-docs {
-  color: #888;
-}
-</style>
+<script>
+import { applyReactInVue, applyPureReactInVue } from "veaury";
+import BasicReactComponent from "./react_app/Basic";
+import { ref } from "vue";
+
+/**
+ * components 에서 사용 할 component 를 applyReactInVue 로 등록 시킴
+ * 등록 시킨 component 의 이름을 사용해서 vue-template 에 사용함
+ */
+export default {
+  components: {
+    Basic: applyReactInVue(BasicReactComponent),
+    BasicPure: applyPureReactInVue(BasicReactComponent),
+  },
+
+  /**
+   * setup 으로 ref 나 동작함수를 args 로 넘길 수 있음
+   */
+  setup() {
+    return {
+      foo: ref("Hello!"),
+    };
+  },
+};
+</script>
